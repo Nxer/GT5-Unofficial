@@ -172,29 +172,30 @@ public class GT_MetaTileEntity_TranscendentPlasmaMixer
     protected ProcessingLogic createProcessingLogic() {
         return new ProcessingLogic() {
 
+            BigInteger recipeEU;
+
             @NotNull
             @Override
             protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
-                mWirelessEUt = 10L * recipe.mEUt * multiplier;
-                if (getUserEU(ownerUUID).compareTo(
-                    BigInteger.valueOf(mWirelessEUt)
-                        .multiply(BigInteger.valueOf(recipe.mDuration)))
-                    < 0) {
-                    return CheckRecipeResultRegistry.insufficientPower(mWirelessEUt * recipe.mDuration);
+                BigInteger availableEU = getUserEU(ownerUUID);
+                recipeEU = BigInteger.valueOf(10L * recipe.mEUt * recipe.mDuration);
+                if (availableEU.compareTo(recipeEU) < 0) {
+                    return CheckRecipeResultRegistry.insufficientStartupPower(recipeEU);
                 }
+                maxParallel = availableEU.divide(recipeEU)
+                    .min(BigInteger.valueOf(maxParallel))
+                    .intValue();
                 return CheckRecipeResultRegistry.SUCCESSFUL;
             }
 
             @NotNull
             @Override
             protected CheckRecipeResult onRecipeStart(@Nonnull GT_Recipe recipe) {
-                mWirelessEUt = 10L * recipe.mEUt * calculatedParallels;
+                BigInteger finalConsumption = recipeEU.multiply(BigInteger.valueOf(-calculatedParallels));
                 // This will void the inputs if wireless energy has dropped
                 // below the required amount between validateRecipe and here.
-                BigInteger powerConsumption = BigInteger.valueOf(-mWirelessEUt)
-                    .multiply(BigInteger.valueOf(recipe.mDuration));
-                if (!addEUToGlobalEnergyMap(ownerUUID, powerConsumption)) {
-                    return CheckRecipeResultRegistry.insufficientPower(-powerConsumption.longValue());
+                if (!addEUToGlobalEnergyMap(ownerUUID, finalConsumption)) {
+                    return CheckRecipeResultRegistry.insufficientStartupPower(finalConsumption);
                 }
                 // Energy consumed all at once from wireless net.
                 setCalculatedEut(0);
