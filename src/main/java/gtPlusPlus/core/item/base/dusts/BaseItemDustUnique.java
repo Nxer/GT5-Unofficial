@@ -14,10 +14,11 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.OrePrefixes;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GTLanguageManager;
+import gregtech.api.util.GTOreDictUnificator;
 import gtPlusPlus.api.objects.Logger;
-import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.config.Configuration;
+import gtPlusPlus.core.lib.GTPPCore;
 import gtPlusPlus.core.material.Material;
 import gtPlusPlus.core.util.data.StringUtils;
 import gtPlusPlus.core.util.math.MathUtils;
@@ -43,7 +44,7 @@ public class BaseItemDustUnique extends Item {
         this.setCreativeTab(tabMisc);
         this.colour = colour;
         this.materialName = materialName;
-        if (mChemicalFormula == null || mChemicalFormula.equals("") || mChemicalFormula.equals("NullFormula")) {
+        if (mChemicalFormula == null || mChemicalFormula.isEmpty() || mChemicalFormula.equals("NullFormula")) {
             this.chemicalNotation = StringUtils.subscript(materialName);
         } else {
             this.chemicalNotation = StringUtils.subscript(mChemicalFormula);
@@ -61,7 +62,7 @@ public class BaseItemDustUnique extends Item {
             } else {
                 type = "%material Dust";
             }
-        GT_LanguageManager.addStringLocalization("gtplusplus." + this.getUnlocalizedName() + ".name", type);
+        GTLanguageManager.addStringLocalization("gtplusplus." + this.getUnlocalizedName() + ".name", type);
 
         String temp = "";
         Logger.WARNING("Unlocalized name for OreDict nameGen: " + this.getUnlocalizedName());
@@ -83,8 +84,8 @@ public class BaseItemDustUnique extends Item {
             temp = temp.replace("itemD", "d");
             Logger.WARNING("Generating OreDict Name: " + temp);
         }
-        if ((temp != null) && !temp.equals("")) {
-            GT_OreDictUnificator.registerOre(temp, ItemUtils.getSimpleStack(this));
+        if ((temp != null) && !temp.isEmpty()) {
+            GTOreDictUnificator.registerOre(temp, ItemUtils.getSimpleStack(this));
         }
         registerComponent();
     }
@@ -115,12 +116,12 @@ public class BaseItemDustUnique extends Item {
 
     @Override
     public String getItemStackDisplayName(final ItemStack iStack) {
-        return GT_LanguageManager.getTranslation("gtplusplus." + getUnlocalizedName() + ".name")
-            .replace("%material", GT_LanguageManager.getTranslation("gtplusplus.material." + materialName));
+        return GTLanguageManager.getTranslation("gtplusplus." + getUnlocalizedName() + ".name")
+            .replace("%material", GTLanguageManager.getTranslation("gtplusplus.material." + materialName));
     }
 
     private String getCorrectTexture(final String pileSize) {
-        if (!CORE.ConfigSwitches.useGregtechTextures) {
+        if (!Configuration.visual.useGregtechTextures) {
             if ((pileSize.equals("dust")) || (pileSize.equals("Dust"))) {
                 this.setTextureName(GTPlusPlus.ID + ":" + "dust");
             } else {
@@ -141,9 +142,9 @@ public class BaseItemDustUnique extends Item {
     @Override
     public void addInformation(final ItemStack stack, final EntityPlayer aPlayer, final List list, final boolean bool) {
         if (this.sRadiation > 0) {
-            list.add(CORE.GT_Tooltip_Radioactive.get());
+            list.add(GTPPCore.GT_Tooltip_Radioactive.get());
         }
-        if (this.chemicalNotation.length() > 0 && !chemicalNotation.equals("")
+        if (!this.chemicalNotation.isEmpty() && !chemicalNotation.isEmpty()
             && !chemicalNotation.equals("NullFormula")) {
             list.add(this.chemicalNotation);
         }

@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GTLanguageManager;
+import gregtech.api.util.GTOreDictUnificator;
 import gtPlusPlus.core.creative.AddToCreativeTab;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
@@ -48,12 +48,12 @@ public class BaseItemMisc extends Item {
         }
         if (description != null) {
             for (int i = 0; i < description.length; i++) {
-                GT_LanguageManager
+                GTLanguageManager
                     .addStringLocalization("gtplusplus." + this.getUnlocalizedName() + ".tooltip." + i, description[i]);
             }
         }
         GameRegistry.registerItem(this, this.unlocalName);
-        GT_OreDictUnificator.registerOre(miscType.getOreDictPrefix() + unlocalName, ItemUtils.getSimpleStack(this));
+        GTOreDictUnificator.registerOre(miscType.getOreDictPrefix() + unlocalName, ItemUtils.getSimpleStack(this));
     }
 
     private String getCorrectTextures() {
@@ -95,7 +95,7 @@ public class BaseItemMisc extends Item {
     public final void addInformation(final ItemStack stack, final EntityPlayer aPlayer, final List list,
         final boolean bool) {
         for (int i = 0;; i++) {
-            String tooltip = GT_LanguageManager
+            String tooltip = GTLanguageManager
                 .getTranslation("gtplusplus." + this.getUnlocalizedName() + ".tooltip" + "." + i);
             if (!("gtplusplus." + this.getUnlocalizedName() + ".tooltip" + "." + i).equals(tooltip)) {
                 list.add(tooltip);
@@ -119,7 +119,7 @@ public class BaseItemMisc extends Item {
         // Nothing Fancy here yet.
     }
 
-    public static enum MiscTypes {
+    public enum MiscTypes {
 
         POTION("Potion", " Potion", "potion"),
         KEY("Key", " Key", "key"),
@@ -133,7 +133,7 @@ public class BaseItemMisc extends Item {
         private final String DISPLAY_NAME_SUFFIX;
         private final String OREDICT_PREFIX;
 
-        private MiscTypes(final String LocalName, final String DisplayNameSuffix, final String OreDictPrefix) {
+        MiscTypes(final String LocalName, final String DisplayNameSuffix, final String OreDictPrefix) {
             this.TYPE = LocalName;
             this.DISPLAY_NAME_SUFFIX = DisplayNameSuffix;
             this.OREDICT_PREFIX = OreDictPrefix;

@@ -5,7 +5,7 @@ import static gregtech.api.enums.Mods.GregTech;
 import static gregtech.api.enums.Mods.IndustrialCraft2;
 import static gregtech.api.enums.Mods.Minecraft;
 import static gregtech.api.recipe.RecipeMaps.packagerRecipes;
-import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
+import static gregtech.api.util.GTRecipeBuilder.SECONDS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,34 +23,34 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+
+import com.google.common.collect.Lists;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
-import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.GTValues;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_ModHandler;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Utility;
-import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.api.util.GTLanguageManager;
+import gregtech.api.util.GTModHandler;
+import gregtech.api.util.GTOreDictUnificator;
+import gregtech.api.util.GTUtility;
+import gregtech.common.items.MetaGeneratedTool01;
 import gtPlusPlus.api.objects.Logger;
-import gtPlusPlus.api.objects.data.AutoMap;
-import gtPlusPlus.api.objects.data.Pair;
+import gtPlusPlus.core.config.ASMConfiguration;
 import gtPlusPlus.core.item.ModItems;
 import gtPlusPlus.core.item.base.dusts.BaseItemDustUnique;
-import gtPlusPlus.core.item.chemistry.AgriculturalChem;
-import gtPlusPlus.core.item.chemistry.GenericChem;
-import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.lib.GTPPCore;
 import gtPlusPlus.core.material.Material;
-import gtPlusPlus.core.recipe.common.CI;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.math.MathUtils;
-import gtPlusPlus.core.util.reflect.ReflectionUtils;
-import gtPlusPlus.preloader.CORE_Preloader;
-import gtPlusPlus.xmod.gregtech.api.items.Gregtech_MetaTool;
+import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
+import gtPlusPlus.xmod.gregtech.api.items.GTMetaTool;
 import gtPlusPlus.xmod.gregtech.common.items.MetaGeneratedGregtechTools;
-import gtPlusPlus.xmod.gregtech.loaders.RecipeGen_DustGeneration;
+import gtPlusPlus.xmod.gregtech.loaders.RecipeGenDustGeneration;
 
 public class ItemUtils {
 
@@ -74,16 +74,16 @@ public class ItemUtils {
         return simpleMetaStack(Item.getItemFromBlock(x), meta, i);
     }
 
-    public static ItemStack getSimpleStack(final Item x, final int i) {
-        return new ItemStack(x, i);
+    public static ItemStack getSimpleStack(final Item item, final int stackSize) {
+        return new ItemStack(item, stackSize);
     }
 
-    public static ItemStack getSimpleStack(final ItemStack x, final int i) {
-        if (x == null) {
+    public static ItemStack getSimpleStack(final ItemStack stack, final int stackSize) {
+        if (stack == null) {
             return null;
         }
-        final ItemStack r = x.copy();
-        r.stackSize = i;
+        final ItemStack r = stack.copy();
+        r.stackSize = stackSize;
         return r;
     }
 
@@ -94,7 +94,7 @@ public class ItemUtils {
     }
 
     public static ItemStack getIC2Cell(final int meta) {
-        return GT_ModHandler.getModItem(IndustrialCraft2.ID, "itemCellEmpty", 1L, meta);
+        return GTModHandler.getModItem(IndustrialCraft2.ID, "itemCellEmpty", 1L, meta);
     }
 
     public static ItemStack getEmptyCell() {
@@ -105,25 +105,16 @@ public class ItemUtils {
         if (ItemList.Cell_Empty.hasBeenSet()) {
             return ItemList.Cell_Empty.get(i);
         }
-        final ItemStack temp = GT_ModHandler.getModItem(IndustrialCraft2.ID, "itemCellEmpty", i, 0);
-        return temp != null ? temp : null;
+        return GTModHandler.getModItem(IndustrialCraft2.ID, "itemCellEmpty", i, 0);
     }
 
     public static void getItemForOreDict(final String FQRN, final String oreDictName, final String itemName,
         final int meta) {
         try {
-            Item em = null;
             final Item em1 = getItemFromFQRN(FQRN);
-
             if (em1 != null) {
-                em = em1;
-            }
-
-            if (em != null) {
-
-                final ItemStack metaStack = new ItemStack(em, 1, meta);
-                GT_OreDictUnificator.registerOre(oreDictName, metaStack);
-
+                final ItemStack metaStack = new ItemStack(em1, 1, meta);
+                GTOreDictUnificator.registerOre(oreDictName, metaStack);
             }
         } catch (final NullPointerException e) {
             Logger.ERROR(itemName + " not found. [NULL]");
@@ -149,17 +140,9 @@ public class ItemUtils {
         final int meta, final int itemstackSize) {
         if (MOD) {
             try {
-                Item em = null;
                 final Item em1 = getItemFromFQRN(FQRN);
-
                 if (em1 != null) {
-                    if (null == em) {
-                        em = em1;
-                    }
-                    if (em != null) {
-                        final ItemStack metaStack = new ItemStack(em, itemstackSize, meta);
-                        return metaStack;
-                    }
+                    return new ItemStack(em1, itemstackSize, meta);
                 }
                 return null;
             } catch (final NullPointerException e) {
@@ -172,17 +155,9 @@ public class ItemUtils {
 
     public static ItemStack simpleMetaStack(final String FQRN, final int meta, final int itemstackSize) {
         try {
-            Item em = null;
             final Item em1 = getItemFromFQRN(FQRN);
-            // Utils.LOG_WARNING("Found: "+em1.getUnlocalizedName()+":"+meta);
             if (em1 != null) {
-                if (null == em) {
-                    em = em1;
-                }
-                if (em != null) {
-                    final ItemStack metaStack = new ItemStack(em, itemstackSize, meta);
-                    return metaStack;
-                }
+                return new ItemStack(em1, itemstackSize, meta);
             }
             return null;
         } catch (final NullPointerException e) {
@@ -251,7 +226,7 @@ public class ItemUtils {
             if (fqrnSplit.length == 2) {
                 Logger.INFO("Mod: " + fqrnSplit[0] + ", Item: " + fqrnSplit[1]);
                 return GameRegistry.findItemStack(fqrnSplit[0], fqrnSplit[1], Size);
-            } else if (fqrnSplit.length == 3 && fqrnSplit[2] != null && fqrnSplit[2].length() > 0) {
+            } else if (fqrnSplit.length == 3 && fqrnSplit[2] != null && !fqrnSplit[2].isEmpty()) {
                 Logger.INFO("Mod: " + fqrnSplit[0] + ", Item: " + fqrnSplit[1] + ", Meta: " + fqrnSplit[2]);
                 ItemStack aStack = GameRegistry.findItemStack(fqrnSplit[0], fqrnSplit[1], Size);
                 int aMeta = Integer.parseInt(fqrnSplit[2]);
@@ -284,8 +259,7 @@ public class ItemUtils {
         }
 
         if (oredictName.contains("rod")) {
-            String s = "stick" + oredictName.substring(3);
-            oredictName = s;
+            oredictName = "stick" + oredictName.substring(3);
         }
 
         // Banned Materials and replacements for GT5.8 compat.
@@ -308,12 +282,8 @@ public class ItemUtils {
     }
 
     public static ItemStack getItemStackOfAmountFromOreDictNoBroken(String oredictName, final int amount) {
-        if (CORE_Preloader.DEBUG_MODE) {
-            Logger.WARNING("Looking up: " + oredictName + " - from method: " + ReflectionUtils.getMethodName(1));
-            Logger.WARNING("Looking up: " + oredictName + " - from method: " + ReflectionUtils.getMethodName(2));
-            Logger.WARNING("Looking up: " + oredictName + " - from method: " + ReflectionUtils.getMethodName(3));
-            Logger.WARNING("Looking up: " + oredictName + " - from method: " + ReflectionUtils.getMethodName(4));
-            Logger.WARNING("Looking up: " + oredictName + " - from method: " + ReflectionUtils.getMethodName(5));
+        if (ASMConfiguration.debug.debugMode) {
+            Logger.modLogger.warn("Looking up: " + oredictName + " - from : ", new Exception());
         }
 
         try {
@@ -353,7 +323,7 @@ public class ItemUtils {
     }
 
     public static ItemStack getGregtechDust(final Materials material, final int amount) {
-        final ItemStack returnValue = GT_OreDictUnificator.get(OrePrefixes.dust, material, 1L);
+        final ItemStack returnValue = GTOreDictUnificator.get(OrePrefixes.dust, material, 1L);
         if (returnValue != null) {
             if (ItemUtils.checkForInvalidItems(returnValue)) {
                 return returnValue.copy();
@@ -371,7 +341,7 @@ public class ItemUtils {
 
     public static Item[] generateSpecialUseDusts(final String unlocalizedName, final String materialName,
         String mChemForm, final int Colour) {
-        GT_LanguageManager.addStringLocalization("gtplusplus.material." + materialName, materialName);
+        GTLanguageManager.addStringLocalization("gtplusplus.material." + materialName, materialName);
         final Item[] output = {
             new BaseItemDustUnique("itemDust" + unlocalizedName, materialName, mChemForm, Colour, "Dust"),
             new BaseItemDustUnique("itemDustSmall" + unlocalizedName, materialName, mChemForm, Colour, "Small"),
@@ -383,15 +353,15 @@ public class ItemUtils {
         final ItemStack smallDust = ItemUtils.getSimpleStack(output[1]);
         final ItemStack tinyDust = ItemUtils.getSimpleStack(output[2]);
 
-        GT_Values.RA.stdBuilder()
-            .itemInputs(GT_Utility.copyAmount(4, smallDust), ItemList.Schematic_Dust.get(0))
+        GTValues.RA.stdBuilder()
+            .itemInputs(GTUtility.copyAmount(4, smallDust), ItemList.Schematic_Dust.get(0))
             .itemOutputs(normalDust)
             .duration(5 * SECONDS)
             .eut(4)
             .addTo(packagerRecipes);
 
-        GT_Values.RA.stdBuilder()
-            .itemInputs(GT_Utility.copyAmount(9, tinyDust), ItemList.Schematic_Dust.get(0))
+        GTValues.RA.stdBuilder()
+            .itemInputs(GTUtility.copyAmount(9, tinyDust), ItemList.Schematic_Dust.get(0))
             .itemOutputs(normalDust)
             .duration(5 * SECONDS)
             .eut(4)
@@ -477,9 +447,9 @@ public class ItemUtils {
         final String unlocalizedName = Utils.sanitizeString(materialName);
         final int Colour = material.getRgbAsHex();
         final String aChemForm = material.vChemicalFormula;
-        final boolean isChemFormvalid = (aChemForm != null && aChemForm.length() > 0);
+        final boolean isChemFormvalid = (aChemForm != null && !aChemForm.isEmpty());
         Item[] output = null;
-        if (onlyLargeDust == false) {
+        if (!onlyLargeDust) {
             output = new Item[] {
                 new BaseItemDustUnique(
                     "itemDust" + unlocalizedName,
@@ -503,7 +473,7 @@ public class ItemUtils {
             output = new Item[] { new BaseItemDustUnique("itemDust" + unlocalizedName, materialName, Colour, "Dust") };
         }
 
-        new RecipeGen_DustGeneration(material, disableExtraRecipes);
+        new RecipeGenDustGeneration(material, disableExtraRecipes);
 
         return output;
     }
@@ -520,10 +490,7 @@ public class ItemUtils {
                 .contains("thorium")) {
                     sRadiation = 1;
                 }
-        if (sRadiation >= 1) {
-            return true;
-        }
-        return false;
+        return sRadiation >= 1;
     }
 
     public static int getRadioactivityLevel(final String materialName) {
@@ -582,14 +549,14 @@ public class ItemUtils {
             final GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(item);
             if (id != null) {
                 final String modname = (id.modId == null ? id.name : id.modId);
-                value = ((id == null) || id.modId.equals("")) ? Minecraft.ID : modname;
+                value = ((id == null) || id.modId.isEmpty()) ? Minecraft.ID : modname;
             }
         } catch (final Throwable t) {
             try {
                 final UniqueIdentifier t2 = GameRegistry.findUniqueIdentifierFor(Block.getBlockFromItem(item));
                 if (t2 != null) {
                     final String modname = (t2.modId == null ? t2.name : t2.modId);
-                    value = ((t2 == null) || t2.modId.equals("")) ? Minecraft.ID : modname;
+                    value = ((t2 == null) || t2.modId.isEmpty()) ? Minecraft.ID : modname;
                 }
             } catch (final Throwable t3) {
                 t3.printStackTrace();
@@ -646,18 +613,14 @@ public class ItemUtils {
         String mName = Utils.sanitizeString(mMat.getLocalizedName());
 
         String mItemName = mPrefix.name() + mName;
-        ItemStack gregstack = ItemUtils.getItemStackOfAmountFromOreDictNoBroken(mItemName, mAmount);
-        if (gregstack == null) {
-            return null;
-        }
-        return (gregstack);
+        return ItemUtils.getItemStackOfAmountFromOreDictNoBroken(mItemName, mAmount);
     }
 
     public static ItemStack getOrePrefixStack(OrePrefixes mPrefix, Materials mMat, int mAmount) {
         if (mPrefix == OrePrefixes.rod) {
             mPrefix = OrePrefixes.stick;
         }
-        ItemStack aGtStack = GT_OreDictUnificator.get(mPrefix, mMat, mAmount);
+        ItemStack aGtStack = GTOreDictUnificator.get(mPrefix, mMat, mAmount);
         if (aGtStack == null) {
             Logger
                 .INFO("Failed to find `" + mPrefix + MaterialUtils.getMaterialName(mMat) + "` in OD. [Prefix Search]");
@@ -688,14 +651,14 @@ public class ItemUtils {
                     returnValues[i] = oreDictList.get(i);
                 }
             }
-            return returnValues.length > 0 ? returnValues : null;
+            return returnValues;
         } else {
             return null;
         }
     }
 
     public static boolean registerFuel(ItemStack aBurnable, int burn) {
-        return CORE.burnables.add(new Pair<>(burn, aBurnable));
+        return GTPPCore.burnables.add(Pair.of(burn, aBurnable));
     }
 
     public static boolean checkForInvalidItems(ItemStack mInput) {
@@ -716,46 +679,34 @@ public class ItemUtils {
             return false;
         }
 
-        if (mInputs.length > 0) {
-            for (ItemStack stack : mInputs) {
-                if (stack != null) {
-                    if (stack.getItem() != null) {
-                        if (stack.getItem() == ModItems.AAA_Broken || stack.getItem()
-                            .getClass() == ModItems.AAA_Broken.getClass()) {
+        for (ItemStack stack : mInputs) {
+            if (stack != null) {
+                if (stack.getItem() != null) {
+                    if (stack.getItem() == ModItems.AAA_Broken || stack.getItem()
+                        .getClass() == ModItems.AAA_Broken.getClass()) {
+                        return false;
+                    } else if (stack.getItem() == ModItems.ZZZ_Empty || stack.getItem()
+                        .getClass() == ModItems.ZZZ_Empty.getClass()) {
                             return false;
-                        } else if (stack.getItem() == ModItems.ZZZ_Empty || stack.getItem()
-                            .getClass() == ModItems.ZZZ_Empty.getClass()) {
-                                return false;
-                            } else {
-                                continue;
-                            }
-                    } else {
-                        continue;
-                    }
-                } else {
-                    return false;
+                        }
                 }
+            } else {
+                return false;
             }
         }
-        if (mOutputs.length > 0) {
-            for (ItemStack stack : mOutputs) {
-                if (stack != null) {
-                    if (stack.getItem() != null) {
-                        if (stack.getItem() == ModItems.AAA_Broken || stack.getItem()
-                            .getClass() == ModItems.AAA_Broken.getClass()) {
+        for (ItemStack stack : mOutputs) {
+            if (stack != null) {
+                if (stack.getItem() != null) {
+                    if (stack.getItem() == ModItems.AAA_Broken || stack.getItem()
+                        .getClass() == ModItems.AAA_Broken.getClass()) {
+                        return false;
+                    } else if (stack.getItem() == ModItems.ZZZ_Empty || stack.getItem()
+                        .getClass() == ModItems.ZZZ_Empty.getClass()) {
                             return false;
-                        } else if (stack.getItem() == ModItems.ZZZ_Empty || stack.getItem()
-                            .getClass() == ModItems.ZZZ_Empty.getClass()) {
-                                return false;
-                            } else {
-                                continue;
-                            }
-                    } else {
-                        continue;
-                    }
-                } else {
-                    return false;
+                        }
                 }
+            } else {
+                return false;
             }
         }
 
@@ -769,16 +720,23 @@ public class ItemUtils {
         }
         // ItemStack[] g = organiseInventory(p);
 
-        IInventory aTemp = aInputInventory;
         for (int i = 0; i < p.length; ++i) {
             for (int j = i + 1; j < p.length; ++j) {
-                if (p[j] != null && (p[i] == null || GT_Utility.areStacksEqual(p[i], p[j]))) {
-                    GT_Utility.moveStackFromSlotAToSlotB(aTemp, aTemp, j, i, (byte) 64, (byte) 1, (byte) 64, (byte) 1);
+                if (p[j] != null && (p[i] == null || GTUtility.areStacksEqual(p[i], p[j]))) {
+                    GTUtility.moveStackFromSlotAToSlotB(
+                        aInputInventory,
+                        aInputInventory,
+                        j,
+                        i,
+                        (byte) 64,
+                        (byte) 1,
+                        (byte) 64,
+                        (byte) 1);
                 }
             }
         }
 
-        return aTemp;
+        return aInputInventory;
     }
 
     public static String getFluidName(FluidStack aFluid) {
@@ -792,7 +750,7 @@ public class ItemUtils {
         }
         String aDisplay = null;
         try {
-            aDisplay = ("" + StatCollector.translateToLocal(
+            aDisplay = (StatCollector.translateToLocal(
                 aStack.getItem()
                     .getUnlocalizedNameInefficiently(aStack) + ".name")).trim();
             if (aStack.hasTagCompound()) {
@@ -840,33 +798,27 @@ public class ItemUtils {
         final Item mItem = aStack.getItem();
         final Item aSkookum = ItemUtils.getItemFromFQRN("miscutils:gt.plusplus.metatool.01");
         final Class aSkookClass = aSkookum.getClass();
-        if (aSkookClass.isInstance(mItem) || mItem instanceof GT_MetaGenerated_Tool_01
+        return aSkookClass.isInstance(mItem) || mItem instanceof MetaGeneratedTool01
             || mItem instanceof MetaGeneratedGregtechTools
-            || mItem instanceof Gregtech_MetaTool
-            || mItem == aSkookum) {
-            return true;
-        }
-        return false;
+            || mItem instanceof GTMetaTool
+            || mItem == aSkookum;
     }
 
     public static boolean isToolScrewdriver(ItemStack aScrewdriver) {
-        if (isItemGregtechTool(aScrewdriver)
-            && (aScrewdriver.getItemDamage() == 22 || aScrewdriver.getItemDamage() == 150)) {
-            return true;
-        }
-        return false;
+        return isItemGregtechTool(aScrewdriver)
+            && (aScrewdriver.getItemDamage() == 22 || aScrewdriver.getItemDamage() == 150);
     }
 
     public static ItemStack[] cleanItemStackArray(ItemStack[] input) {
         int aArraySize = input.length;
         ItemStack[] aOutput = new ItemStack[aArraySize];
-        AutoMap<ItemStack> aCleanedItems = new AutoMap<>();
+        ArrayList<ItemStack> aCleanedItems = new ArrayList<>();
         for (ItemStack checkStack : input) {
             if (ItemUtils.checkForInvalidItems(checkStack)) {
-                aCleanedItems.put(checkStack);
+                aCleanedItems.add(checkStack);
             }
         }
-        for (int i = 0; i < aArraySize; i++) {
+        for (int i = 0; i < aCleanedItems.size(); i++) {
             ItemStack aMappedStack = aCleanedItems.get(i);
             if (aMappedStack != null) {
                 aOutput[i] = aMappedStack;
@@ -884,7 +836,7 @@ public class ItemUtils {
     }
 
     public static ItemStack getNullStack() {
-        return GT_Values.NI;
+        return GTValues.NI;
     }
 
     public static ItemStack depleteStack(ItemStack aStack) {
@@ -905,118 +857,118 @@ public class ItemUtils {
 
     public static boolean isControlCircuit(ItemStack aStack) {
         if (aStack != null) {
-            Item aItem = aStack.getItem();
-            if (aItem == CI.getNumberedBioCircuit(0)
-                .getItem() || aItem
-                    == GT_Utility.getIntegratedCircuit(0)
-                        .getItem()
-                || aItem == CI.getNumberedAdvancedCircuit(0)
-                    .getItem()) {
-                return true;
-            }
+            return aStack.getItem() == GTUtility.getIntegratedCircuit(0)
+                .getItem();
         }
         return false;
+    }
+
+    private static final List<ItemStack> additionalCatalysts = Lists.newArrayList();
+
+    public static void registerCatalyst(@NotNull ItemStack stack) {
+        additionalCatalysts.add(stack);
     }
 
     public static boolean isCatalyst(ItemStack aStack) {
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mBlueCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.BlueMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mBrownCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.BrownMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mOrangeCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.OrangeMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mPurpleCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.PurpleMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mRedCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.RedMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mYellowCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.YellowMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mPinkCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.PinkMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mFormaldehydeCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.FormaldehydeCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mSolidAcidCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.SolidAcidCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mInfiniteMutationCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.InfiniteMutationCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, AgriculturalChem.mGreenCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.GreenMetalCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mPlatinumGroupCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.PlatinumGroupCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mPlasticPolymerCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.PlasticPolymerCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mRubberPolymerCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.RubberPolymerCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mAdhesionPromoterCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.AdhesionPromoterCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mTitaTungstenIndiumCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.TitaTungstenIndiumCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mRadioactivityCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.RadioactivityCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mRareEarthGroupCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.RareEarthGroupCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mSimpleNaquadahCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.SimpleNaquadahCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mAdvancedNaquadahCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.AdvancedNaquadahCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mRawIntelligenceCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.RawIntelligenceCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mUltimatePlasticCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.UltimatePlasticCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mBiologicalIntelligenceCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.BiologicalIntelligenceCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.TemporalHarmonyCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.TemporalHarmonyCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mLimpidWaterCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.ParticleAccelerationCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mFlawlessWaterCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.SynchrotronCapableCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mParticleAccelerationCatalyst, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.AlgagenicGrowthPromoterCatalyst.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mSynchrotronCapableCatalyst, true)) {
-            return true;
-        }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mAlgagenicGrowthPromoterCatalyst, true)) {
-            return true;
-        }
+        return additionalCatalysts.stream()
+            .anyMatch(it -> GTUtility.areStacksEqual(aStack, it, true));
+    }
 
-        return false;
+    private static final List<ItemStack> additionalMillingBalls = Lists.newArrayList();
+
+    public static void registerMillingBall(@NotNull ItemStack stack) {
+        additionalMillingBalls.add(stack);
     }
 
     public static boolean isMillingBall(ItemStack aStack) {
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mMillingBallAlumina, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.Milling_Ball_Alumina.get(1), true)) {
             return true;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mMillingBallSoapstone, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.Milling_Ball_Soapstone.get(1), true)) {
             return true;
         }
-        return false;
+        return additionalMillingBalls.stream()
+            .anyMatch(it -> GTUtility.areStacksEqual(aStack, it, true));
     }
 }

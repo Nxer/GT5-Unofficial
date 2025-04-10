@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
@@ -285,8 +286,7 @@ public class BaseItemTickable extends CoreItem {
             return 0;
         }
         double currentDamage = getTicks(null, stack);
-        double durabilitypercent = currentDamage / getMaxTicks(stack);
-        return durabilitypercent;
+        return currentDamage / getMaxTicks(stack);
     }
 
     @SuppressWarnings("unchecked")
@@ -314,7 +314,9 @@ public class BaseItemTickable extends CoreItem {
         } else if (maxTicks - ticks > 0) {
             durability = EnumChatFormatting.RED;
         }
-        list.add(durability + "" + ((maxTicks - ticks) / 20) + EnumChatFormatting.GRAY + " seconds until decay");
+        list.add(
+            durability + StatCollector
+                .translateToLocalFormatted("gtpp.tooltip.tickable.decay_seconds", (maxTicks - ticks) / 20));
 
         if (this.descriptionString.length > 1) {
             for (int h = 1; h < this.descriptionString.length; h++) {

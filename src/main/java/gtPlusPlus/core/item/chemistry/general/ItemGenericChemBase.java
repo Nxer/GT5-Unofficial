@@ -14,16 +14,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.util.GT_Utility;
-import gtPlusPlus.core.item.chemistry.GenericChem;
+import gregtech.api.util.GTUtility;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
+import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 
 public class ItemGenericChemBase extends Item {
 
-    protected final IIcon base[];
+    protected final IIcon[] base;
 
     private final int aMetaSize = 34;
 
@@ -189,14 +190,16 @@ public class ItemGenericChemBase extends Item {
         int aDam = 0;
         EnumChatFormatting durability = EnumChatFormatting.GRAY;
         if (ItemUtils.isMillingBall(aStack)) {
-            list.add(EnumChatFormatting.GRAY + "Tumble Tumble Tumble");
+            list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("GTPP.tooltip.milling_ball.tumble"));
             aMaxDamage = getMillingBallMaxDamage(aStack);
             aDamageSegment = aMaxDamage / 5;
             aDam = aMaxDamage - getMillingBallDamage(aStack);
             aHasSpecialTooltips = true;
         }
         if (ItemUtils.isCatalyst(aStack)) {
-            list.add(EnumChatFormatting.GRAY + "Active Reaction Agent");
+            list.add(
+                EnumChatFormatting.GRAY
+                    + StatCollector.translateToLocal("GTPP.tooltip.catalyst.active_reaction_agent"));
             aMaxDamage = getCatalystMaxDamage(aStack);
             aDamageSegment = aMaxDamage / 5;
             aDam = aMaxDamage - getCatalystDamage(aStack);
@@ -221,14 +224,10 @@ public class ItemGenericChemBase extends Item {
     public boolean showDurabilityBar(ItemStack aStack) {
         if (ItemUtils.isMillingBall(aStack)) {
             int aDam = getMillingBallDamage(aStack);
-            if (aDam > 0) {
-                return true;
-            }
+            return aDam > 0;
         } else if (ItemUtils.isCatalyst(aStack)) {
             int aDam = getCatalystDamage(aStack);
-            if (aDam > 0) {
-                return true;
-            }
+            return aDam > 0;
         }
         return false;
     }
@@ -270,10 +269,10 @@ public class ItemGenericChemBase extends Item {
     }
 
     public static int getMaxBallDurability(ItemStack aStack) {
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mMillingBallAlumina, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.Milling_Ball_Alumina.get(1), true)) {
             return 100;
         }
-        if (GT_Utility.areStacksEqual(aStack, GenericChem.mMillingBallSoapstone, true)) {
+        if (GTUtility.areStacksEqual(aStack, GregtechItemList.Milling_Ball_Soapstone.get(1), true)) {
             return 50;
         }
         return 0;

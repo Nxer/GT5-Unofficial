@@ -15,12 +15,12 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.material.Material;
 import gtPlusPlus.core.util.Utils;
-import gtPlusPlus.xmod.tinkers.HANDLER_Tinkers;
+import gtPlusPlus.xmod.tinkers.HandlerTinkers;
 import gtPlusPlus.xmod.tinkers.util.TinkersUtils;
 
 public class BaseTinkersMaterial {
 
-    private static HashMap<String, Integer> aInternalMaterialIdMap = new HashMap<>();
+    private static final HashMap<String, Integer> aInternalMaterialIdMap = new HashMap<>();
     private static int aNextFreeID;
 
     public final String mLocalName;
@@ -40,7 +40,7 @@ public class BaseTinkersMaterial {
         mID = aNextFreeID++;
         Logger.INFO("[TiCon] Assigning ID " + mID + " to " + mLocalName + ".");
         aInternalMaterialIdMap.put(mUnlocalName, mID);
-        HANDLER_Tinkers.mTinkerMaterials.put(this);
+        HandlerTinkers.mTinkerMaterials.add(this);
     }
 
     public String getUnlocalName() {
@@ -165,20 +165,12 @@ public class BaseTinkersMaterial {
 
     private boolean generateRecipes(Material aMaterial, int aID) {
 
-        Block aMatBlock;
-        Integer aMelt;
-        Fluid aFluid;
+        Block aMatBlock = aMaterial.getBlock();
+        int aMelt = aMaterial.getMeltingPointC();
+        Fluid aFluid = aMaterial.getFluidStack(0)
+            .getFluid();
 
-        try {
-            aMatBlock = aMaterial.getBlock();
-            aMelt = aMaterial.getMeltingPointC();
-            aFluid = aMaterial.getFluidStack(0)
-                .getFluid();
-        } catch (Throwable t) {
-            return false;
-        }
-
-        if (aMatBlock == null || aMelt == null || aFluid == null) {
+        if (aMatBlock == null || aFluid == null) {
             return false;
         }
 
@@ -187,12 +179,10 @@ public class BaseTinkersMaterial {
         TinkersUtils.addMelting(aMaterial.getIngot(1), aMatBlock, 0, aMelt, aMaterial.getFluidStack(144));
         if (aMelt <= 3600) {
             ItemStack ingotcast = TinkersUtils.getPattern(1);
-            TinkersUtils
-                .addBasinRecipe(aMaterial.getBlock(1), aMaterial.getFluidStack(144 * 9), (ItemStack) null, true, 100);
+            TinkersUtils.addBasinRecipe(aMaterial.getBlock(1), aMaterial.getFluidStack(144 * 9), null, true, 100);
             TinkersUtils
                 .addCastingTableRecipe(aMaterial.getIngot(1), aMaterial.getFluidStack(144), ingotcast, false, 50);
         }
-
         TinkersUtils.generateCastingRecipes(aMaterial, aID);
 
         return true;

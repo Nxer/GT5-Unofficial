@@ -15,6 +15,7 @@ public enum Mods {
     AdvancedSolarPanel(Names.ADVANCED_SOLAR_PANEL),
     AdventureBackpack(Names.ADVENTURE_BACKPACK),
     AkashicTome(Names.AKASHIC_TOME),
+    Angelica(Names.ANGELICA),
     AppleCore(Names.APPLE_CORE),
     AppliedEnergistics2(Names.APPLIED_ENERGISTICS2),
     ArchitectureCraft(Names.ARCHITECTURE_CRAFT),
@@ -34,6 +35,7 @@ public enum Mods {
     BiblioWoodsNaturaEdition(Names.BIBLIO_WOODS_NATURA_EDITION),
     BinnieCore(Names.BINNIE_CORE),
     BiomesOPlenty(Names.BIOMES_O_PLENTY),
+    BlockRenderer6343(Names.BLOCK_RENDERER_6343),
     BloodArsenal(Names.BLOOD_ARSENAL),
     BloodMagic(Names.BLOOD_MAGIC),
     Botania(Names.BOTANIA),
@@ -62,6 +64,7 @@ public enum Mods {
     EnderZoo(Names.ENDER_ZOO),
     EnhancedLootBags(Names.ENHANCED_LOOT_BAGS),
     EternalSingularity(Names.ETERNAL_SINGULARITY),
+    EtFuturumRequiem(Names.ET_FUTURUM_REQUIEM),
     ExtraBees(Names.EXTRA_BEES),
     ExtraCells2(Names.EXTRA_CELLS2),
     ExtraTrees(Names.EXTRA_TREES),
@@ -71,6 +74,7 @@ public enum Mods {
     Forestry(Names.FORESTRY),
     ForgeMicroblocks(Names.FORGE_MICROBLOCKS),
     ForgeRelocation(Names.FORGE_RELOCATION),
+    GGFab(Names.G_G_FAB),
     GTNHIntergalactic(Names.G_T_N_H_INTERGALACTIC),
     GTNHLanthanides(Names.G_T_N_H_LANTHANIDES),
     GTPlusPlus(Names.G_T_PLUS_PLUS),
@@ -102,6 +106,7 @@ public enum Mods {
     KekzTech(Names.KEKZ_TECH),
     KubaTech(Names.KUBA_TECH),
     LogisticsPipes(Names.LOGISTICS_PIPES),
+    MatterManipulator(Names.MATTER_MANIPULATOR),
     MCFrames(Names.MC_FRAMES),
     MagicBees(Names.MAGIC_BEES),
     MalisisDoors(Names.MALISIS_DOORS),
@@ -109,6 +114,7 @@ public enum Mods {
     MineAndBladeBattleGear2(Names.MINE_AND_BLADE_BATTLE_GEAR2),
     Minecraft(Names.MINECRAFT),
     MineTweaker(Names.MINE_TWEAKER),
+    MobsInfo(Names.MOBS_INFO),
     NEICustomDiagrams(Names.N_E_I_CUSTOM_DIAGRAMS),
     NEIOrePlugin(Names.N_E_I_ORE_PLUGIN),
     Natura(Names.NATURA),
@@ -176,14 +182,8 @@ public enum Mods {
     ZTones(Names.Z_TONES),
 
     // Do we keep compat of those?
-    ArsMagica2(Names.ARS_MAGICA2),
-    GanysSurface(Names.GANYS_SURFACE),
-    IndustrialCraft2Classic(Names.INDUSTRIAL_CRAFT2_CLASSIC),
-    MagicalCrops(Names.MAGICAL_CROPS),
     Metallurgy(Names.METALLURGY),
     RotaryCraft(Names.ROTARY_CRAFT),
-    ThermalExpansion(Names.THERMAL_EXPANSION),
-    ThermalFondation(Names.THERMAL_FONDATION),
     UndergroundBiomes(Names.UNDERGROUND_BIOMES),
 
     ;
@@ -197,6 +197,7 @@ public enum Mods {
         public static final String ADVANCED_SOLAR_PANEL = "AdvancedSolarPanel";
         public static final String ADVENTURE_BACKPACK = "adventurebackpack";
         public static final String AKASHIC_TOME = "akashictome";
+        public static final String ANGELICA = "angelica";
         public static final String APPLE_CORE = "AppleCore";
         public static final String APPLIED_ENERGISTICS2 = "appliedenergistics2";
         public static final String ARCHITECTURE_CRAFT = "ArchitectureCraft";
@@ -216,6 +217,7 @@ public enum Mods {
         public static final String BIBLIO_WOODS_NATURA_EDITION = "BiblioWoodsNatura";
         public static final String BINNIE_CORE = "BinnieCore";
         public static final String BIOMES_O_PLENTY = "BiomesOPlenty";
+        public static final String BLOCK_RENDERER_6343 = "blockrenderer6343";
         public static final String BLOOD_ARSENAL = "BloodArsenal";
         public static final String BLOOD_MAGIC = "AWWayofTime";
         public static final String BOTANIA = "Botania";
@@ -244,6 +246,7 @@ public enum Mods {
         public static final String ENDER_ZOO = "EnderZoo";
         public static final String ENHANCED_LOOT_BAGS = "enhancedlootbags";
         public static final String ETERNAL_SINGULARITY = "eternalsingularity";
+        public static final String ET_FUTURUM_REQUIEM = "etfuturum";
         public static final String EXTRA_BEES = "ExtraBees";
         public static final String EXTRA_CELLS2 = "extracells";
         public static final String EXTRA_TREES = "ExtraTrees";
@@ -253,6 +256,7 @@ public enum Mods {
         public static final String FORESTRY = "Forestry";
         public static final String FORGE_MICROBLOCKS = "ForgeMicroblock";
         public static final String FORGE_RELOCATION = "ForgeRelocation";
+        public static final String G_G_FAB = "ggfab";
         public static final String G_T_N_H_INTERGALACTIC = "gtnhintergalactic";
         public static final String G_T_N_H_LANTHANIDES = "gtnhlanth";
         public static final String G_T_PLUS_PLUS = "miscutils";
@@ -284,6 +288,7 @@ public enum Mods {
         public static final String KEKZ_TECH = "kekztech";
         public static final String KUBA_TECH = "kubatech";
         public static final String LOGISTICS_PIPES = "LogisticsPipes";
+        public static final String MATTER_MANIPULATOR = "matter-manipulator";
         public static final String MC_FRAMES = "MCFrames";
         public static final String MAGIC_BEES = "MagicBees";
         public static final String MALISIS_DOORS = "malisisdoors";
@@ -291,6 +296,7 @@ public enum Mods {
         public static final String MINE_AND_BLADE_BATTLE_GEAR2 = "battlegear2";
         public static final String MINECRAFT = "minecraft";
         public static final String MINE_TWEAKER = "MineTweaker3";
+        public static final String MOBS_INFO = "mobsinfo";
         public static final String N_E_I_CUSTOM_DIAGRAMS = "neicustomdiagram";
         public static final String N_E_I_ORE_PLUGIN = "gtneioreplugin";
         public static final String NATURA = "Natura";
@@ -358,14 +364,8 @@ public enum Mods {
         public static final String Z_TONES = "Ztones";
 
         // Do we keep compat of those mods?
-        public static final String ARS_MAGICA2 = "arsmagica2";
-        public static final String GANYS_SURFACE = "ganyssurface";
-        public static final String INDUSTRIAL_CRAFT2_CLASSIC = "IC2-Classic-Spmod";
-        public static final String MAGICAL_CROPS = "magicalcrops";
         public static final String METALLURGY = "Metallurgy";
         public static final String ROTARY_CRAFT = "RotaryCraft";
-        public static final String THERMAL_EXPANSION = "ThermalExpansion";
-        public static final String THERMAL_FONDATION = "ThermalFoundation";
         public static final String UNDERGROUND_BIOMES = "UndergroundBiomes";
 
     }

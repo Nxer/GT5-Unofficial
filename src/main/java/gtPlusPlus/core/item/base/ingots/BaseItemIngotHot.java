@@ -3,7 +3,7 @@ package gtPlusPlus.core.item.base.ingots;
 import static gregtech.api.enums.Mods.GTPlusPlus;
 import static gregtech.api.enums.Mods.GregTech;
 import static gregtech.api.recipe.RecipeMaps.vacuumFreezerRecipes;
-import static gregtech.api.util.GT_RecipeBuilder.TICKS;
+import static gregtech.api.util.GTRecipeBuilder.TICKS;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.GTValues;
 import gtPlusPlus.api.objects.Logger;
+import gtPlusPlus.core.config.Configuration;
 import gtPlusPlus.core.item.base.BaseItemComponent;
-import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.material.Material;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.minecraft.EntityUtils;
@@ -26,7 +26,7 @@ import gtPlusPlus.core.util.minecraft.ItemUtils;
 public class BaseItemIngotHot extends BaseItemIngot {
 
     private final ItemStack outputIngot;
-    private int tickCounter = 0;
+    private final int tickCounter = 0;
     private final int tickCounterMax = 200;
     private final int mTier;
 
@@ -54,7 +54,7 @@ public class BaseItemIngotHot extends BaseItemIngot {
 
     private void generateRecipe() {
         Logger.WARNING("Adding Vacuum Freezer recipe for a Hot Ingot of " + this.materialName + ".");
-        GT_Values.RA.stdBuilder()
+        GTValues.RA.stdBuilder()
             .itemInputs(ItemUtils.getSimpleStack(this))
             .itemOutputs(this.outputIngot.copy())
             .duration(Math.max(this.componentMaterial.getMass() * 3L, 1L) * TICKS)
@@ -66,7 +66,7 @@ public class BaseItemIngotHot extends BaseItemIngot {
     public void onUpdate(final ItemStack iStack, final World world, final Entity entityHolding, final int p_77663_4_,
         final boolean p_77663_5_) {
         if (this.componentMaterial != null) {
-            if (entityHolding != null && entityHolding instanceof EntityPlayer) {
+            if (entityHolding instanceof EntityPlayer) {
                 if (!((EntityPlayer) entityHolding).capabilities.isCreativeMode) {
                     EntityUtils.applyHeatDamageToEntity(1, world, entityHolding);
                 }
@@ -78,17 +78,13 @@ public class BaseItemIngotHot extends BaseItemIngot {
     @Override
     @SideOnly(Side.CLIENT)
     public boolean requiresMultipleRenderPasses() {
-        if (CORE.ConfigSwitches.useGregtechTextures) {
-            return true;
-        } else {
-            return false;
-        }
+        return Configuration.visual.useGregtechTextures;
     }
 
     @Override
     public void registerIcons(final IIconRegister i) {
 
-        if (CORE.ConfigSwitches.useGregtechTextures) {
+        if (Configuration.visual.useGregtechTextures) {
             this.base = i.registerIcon(GregTech.ID + ":" + "materialicons/METALLIC/" + "ingotHot");
             this.overlay = i.registerIcon(GregTech.ID + ":" + "materialicons/METALLIC/" + "ingotHot_OVERLAY");
         } else {
@@ -100,9 +96,9 @@ public class BaseItemIngotHot extends BaseItemIngot {
 
     @Override
     public IIcon getIconFromDamageForRenderPass(final int damage, final int pass) {
-        if (pass == 0 && CORE.ConfigSwitches.useGregtechTextures) {
+        if (pass == 0 && Configuration.visual.useGregtechTextures) {
             return this.base;
-        } else if (pass == 1 && CORE.ConfigSwitches.useGregtechTextures) {
+        } else if (pass == 1 && Configuration.visual.useGregtechTextures) {
             return this.overlay;
         } else {
             return this.overlay;

@@ -9,13 +9,13 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import gregtech.api.enums.ItemList;
+import gtPlusPlus.core.config.Configuration;
 import gtPlusPlus.core.item.base.BaseItemComponent;
-import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.material.Material;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.minecraft.FluidUtils;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
-import ic2.core.Ic2Items;
 
 public class BaseItemCell extends BaseItemComponent {
 
@@ -23,7 +23,7 @@ public class BaseItemCell extends BaseItemComponent {
 
     public BaseItemCell(final Material material) {
         super(material, BaseItemComponent.ComponentTypes.CELL);
-        this.fluidColour = (short[]) material.getRGBA();
+        this.fluidColour = material.getRGBA();
     }
 
     public BaseItemCell(final String unlocalName, final String localName, final short[] RGBa) {
@@ -31,7 +31,8 @@ public class BaseItemCell extends BaseItemComponent {
         this.fluidColour = RGBa;
         FluidStack aFluid = FluidUtils.getFluidStack(unlocalName.toLowerCase(), 1000);
         if (aFluid != null) {
-            FluidContainerRegistry.registerFluidContainer(aFluid, ItemUtils.getSimpleStack(this), Ic2Items.cell.copy());
+            FluidContainerRegistry
+                .registerFluidContainer(aFluid, ItemUtils.getSimpleStack(this), ItemList.Cell_Empty.get(1));
         }
     }
 
@@ -41,13 +42,13 @@ public class BaseItemCell extends BaseItemComponent {
         FluidContainerRegistry.registerFluidContainer(
             FluidUtils.getFluidStack(cellFluid, 1000),
             ItemUtils.getSimpleStack(this),
-            Ic2Items.cell.copy());
+            ItemList.Cell_Empty.get(1));
     }
 
     @Override
     public void registerIcons(final IIconRegister i) {
 
-        if (CORE.ConfigSwitches.useGregtechTextures) {
+        if (Configuration.visual.useGregtechTextures) {
             this.base = i.registerIcon(GregTech.ID + ":" + "materialicons/METALLIC/" + "cell");
             this.overlay = i.registerIcon(GregTech.ID + ":" + "materialicons/METALLIC/" + "cell_OVERLAY");
         } else {
@@ -62,10 +63,10 @@ public class BaseItemCell extends BaseItemComponent {
 
     @Override
     public int getColorFromItemStack(final ItemStack stack, final int renderPass) {
-        if (renderPass == 0 && !CORE.ConfigSwitches.useGregtechTextures) {
+        if (renderPass == 0 && !Configuration.visual.useGregtechTextures) {
             return Utils.rgbtoHexValue(230, 230, 230);
         }
-        if (renderPass == 1 && CORE.ConfigSwitches.useGregtechTextures) {
+        if (renderPass == 1 && Configuration.visual.useGregtechTextures) {
             return Utils.rgbtoHexValue(230, 230, 230);
         }
         return this.componentColour;

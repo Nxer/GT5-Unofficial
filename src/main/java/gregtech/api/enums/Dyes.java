@@ -3,12 +3,16 @@ package gregtech.api.enums;
 import java.util.ArrayList;
 
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.jetbrains.annotations.Contract;
+
 import gregtech.api.interfaces.IColorModulationContainer;
-import gregtech.api.objects.GT_ArrayList;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.objects.GTArrayList;
+import gregtech.api.util.GTUtil;
+import gregtech.api.util.GTUtility;
 
 public enum Dyes implements IColorModulationContainer {
 
@@ -50,7 +54,7 @@ public enum Dyes implements IColorModulationContainer {
     public final short[] mRGBa;
     public final short[] mOriginalRGBa;
     public final EnumChatFormatting formatting;
-    private final ArrayList<Fluid> mFluidDyes = new GT_ArrayList<>(false, 1);
+    private final ArrayList<Fluid> mFluidDyes = new GTArrayList<>(false, 1);
 
     Dyes(int aIndex, int aR, int aG, int aB, String aName) {
         this(aIndex, aR, aG, aB, aName, EnumChatFormatting.GRAY);
@@ -75,7 +79,7 @@ public enum Dyes implements IColorModulationContainer {
     }
 
     public static Dyes get(String aColor) {
-        Object tObject = GT_Utility.getFieldContent(Dyes.class, aColor, false, false);
+        Object tObject = GTUtility.getFieldContent(Dyes.class, aColor, false, false);
         if (tObject instanceof Dyes) return (Dyes) tObject;
         return _NULL;
     }
@@ -120,7 +124,30 @@ public enum Dyes implements IColorModulationContainer {
         return mRGBa;
     }
 
+    public int toInt() {
+        return GTUtil.getRGBInt(getRGBA());
+    }
+
     public static Dyes getDyeFromIndex(short index) {
         return index != -1 ? Dyes.get(index) : Dyes.MACHINE_METAL;
+    }
+
+    /**
+     * Transforms a dye index between the GT index for this color and the vanilla index for this color.
+     *
+     * @param color an integer between 0 and 15
+     * @return the transformed color
+     */
+    @Contract(pure = true)
+    public static int transformDyeIndex(final int color) {
+        if (color < 0 || color > 15) {
+            throw new IllegalArgumentException("Color passed to transformColor must be between 0 and 15");
+        }
+
+        return (~(byte) color) & 0xF;
+    }
+
+    public String getLocalizedDyeName() {
+        return StatCollector.translateToLocal("GT5U.infinite_spray_can.color." + this.mName);
     }
 }

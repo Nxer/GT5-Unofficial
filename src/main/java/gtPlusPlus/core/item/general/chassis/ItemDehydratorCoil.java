@@ -12,7 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.GTValues;
 import gtPlusPlus.core.creative.AddToCreativeTab;
 
 public class ItemDehydratorCoil extends Item {
@@ -30,10 +30,10 @@ public class ItemDehydratorCoil extends Item {
 
     @Override
     public void registerIcons(IIconRegister reg) {
-        this.icons[0] = reg.registerIcon(GTPlusPlus.ID + ":" + "dehydrator/itemDehydratorCoil_0");
-        this.icons[1] = reg.registerIcon(GTPlusPlus.ID + ":" + "dehydrator/itemDehydratorCoil_1");
-        this.icons[2] = reg.registerIcon(GTPlusPlus.ID + ":" + "dehydrator/itemDehydratorCoil_2");
-        this.icons[3] = reg.registerIcon(GTPlusPlus.ID + ":" + "dehydrator/itemDehydratorCoil_3");
+        this.icons[0] = reg.registerIcon(GTPlusPlus.ID + ":itemDehydratorCoil_0");
+        this.icons[1] = reg.registerIcon(GTPlusPlus.ID + ":itemDehydratorCoil_1");
+        this.icons[2] = reg.registerIcon(GTPlusPlus.ID + ":itemDehydratorCoil_2");
+        this.icons[3] = reg.registerIcon(GTPlusPlus.ID + ":itemDehydratorCoil_3");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ItemDehydratorCoil extends Item {
     @Override
     public String getItemStackDisplayName(final ItemStack tItem) {
         return StatCollector
-            .translateToLocalFormatted("item.itemDehydratorCoil.name", GT_Values.VN[tItem.getItemDamage() + 4]);
+            .translateToLocalFormatted("item.itemDehydratorCoil.name", GTValues.VN[tItem.getItemDamage() + 4]);
     }
 
     /*

@@ -104,6 +104,10 @@ public final class SubTag implements ICondition<ISubTagContainer> {
      */
     public static final SubTag NO_SMELTING = getNewSubTag("NO_SMELTING");
     /**
+     * This Material cannot have its Ore and associated prefixes processed, and must be handled manually.
+     */
+    public static final SubTag NO_ORE_PROCESSING = getNewSubTag("NO_ORE_PROCESSING");
+    /**
      * This Material can be molten into a Fluid
      */
     public static final SubTag SMELTING_TO_FLUID = getNewSubTag("SMELTING_TO_FLUID");
@@ -236,6 +240,15 @@ public final class SubTag implements ICondition<ISubTagContainer> {
      * Projectile Tag for Arrows
      */
     public static final SubTag PROJECTILE_ARROW = getNewSubTag("PROJECTILE_ARROW");
+    /**
+     * If this material cannot be made superdense using the HIP unit
+     */
+    public static final SubTag BLACK_HOLE = getNewSubTag("BLACK_HOLE");
+
+    /**
+     * If this material should generate Multi-plates (triple, quadruple, quintuple)
+     */
+    public static final SubTag MULTI_PLATE = getNewSubTag("MULTI_PLATE");
 
     public final Collection<ISubTagContainer> mRelevantTaggedItems = new HashSet<>(1);
 

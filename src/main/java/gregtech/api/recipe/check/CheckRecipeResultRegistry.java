@@ -109,7 +109,18 @@ public final class CheckRecipeResultRegistry {
     public static final CheckRecipeResult BACKFILLER_NO_CONCRETE = SimpleCheckRecipeResult
         .ofFailure("backfiller_no_concrete");
 
+    /**
+     * Black Hole Compressor does not have an active black hole
+     */
+    public static final CheckRecipeResult NO_BLACK_HOLE = SimpleCheckRecipeResult.ofFailure("no_black_hole");
+
     public static final CheckRecipeResult NO_SEE_SKY = SimpleCheckRecipeResult.ofFailure("no_see_sky");
+
+    /**
+     * Machine is waiting for the main controller to start the cycle.
+     */
+    @Nonnull
+    public static final CheckRecipeResult CYCLE_IDLE = SimpleCheckRecipeResult.ofSuccess("cycle_idle");
 
     /**
      * Cannot process recipe because the machine cannot handle required EUt.
@@ -155,5 +166,6 @@ public final class CheckRecipeResultRegistry {
         register(new ResultInsufficientMachineTier(0));
         register(new ResultInsufficientStartupPower(0));
         register(new ResultInsufficientStartupPowerBigInt(BigInteger.ZERO));
+        register(new ResultMissingItem());
     }
 }
