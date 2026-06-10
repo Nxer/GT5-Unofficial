@@ -17,6 +17,8 @@ GT5U.providesfullhazmatprotection=防化效果与单件防化服一致
 # Multiblock Tooltip Builder Keywords
 # Context can be found in the class gregtech.api.util.GT_Multiblock_Tooltip_Builder
 GT5U.MBTT.MachineType=机器类型
+GT5U.MBTT.PowerUsage=功率消耗
+GT5U.MBTT.BaseAmperage=基础电流
 GT5U.MBTT.Dimensions=大小
 GT5U.MBTT.Hollow=(中空)
 GT5U.MBTT.Structure=结构
@@ -69,7 +71,7 @@ GT5U.LHE.threshold=阈值
 GT5U.fusion.req=需要EU
 GT5U.fusion.plasma=等离子体输出
 
-GT5U.EBF.heat=热容
+GT5U.EBF.heat.s=热容: §a%s §rK
 GT5U.coil.None=无
 GT5U.coil.ULV=无
 GT5U.coil.LV=白铜
@@ -99,7 +101,6 @@ GT5U.machines.miner=采矿机
 GT5U.machines.powersource.power=功率
 GT5U.machines.powersource.steam=蒸汽
 GT5U.machines.pump=泵
-GT5U.machines.separatebus=输入总线已独立
 GT5U.machines.pumpareaset=工作区域设置为
 GT5U.machines.oilfluidpump=石油/流体钻机
 GT5U.machines.minermulti=采矿场
@@ -160,7 +161,6 @@ GT5U.machines.stalled_vent.tooltip.2=§7以旋转其蒸汽输出口
 GT5U.machines.stalled_vent.tooltip.3=§7指向没有遮挡的方向.
 GT5U.machines.stalled_vent.tooltip.extended=§7处理进度丢失了，
 GT5U.machines.stalled_vent.tooltip.extended.1=§7但处理产物还在.
-GT5U.machines.oreprocessor1=§e运行模式：
 GT5U.machines.oreprocessor2=§c时间：%s s
 GT5U.machines.oreprocessor.void=§e销毁石粉：%s
 GT5U.machines.industrialapiary.cancel.tooltip=§c取消处理
@@ -185,15 +185,15 @@ GT5U.machines.industrialapiary.infoextended.tooltip.5=寿命：%6$d %%
 GT5U.machines.industrialapiary.infoextended.tooltip.6=范围：%7$d x %8$d x %9$d
 GT5U.machines.industrialapiary.upgradeslot.tooltip=升级槽
 GT5U.machines.industrialapiary.upgradeslot.tooltip.1=§7同时兼容基因工业(gendustry)升级
-GT5U.machines.advdebugstructurewriter.tooltip=扫描周围的方块
-GT5U.machines.advdebugstructurewriter.tooltip.1=打印多方块非-方块实体结构验证码
-GT5U.machines.advdebugstructurewriter.tooltip.2=ABC轴与机器正面对齐
-GT5U.machines.advdebugstructurewriter.printed=已打印到控制台的结构
-GT5U.machines.advdebugstructurewriter.gui.origin=原点
-GT5U.machines.advdebugstructurewriter.gui.size=结构尺寸
-GT5U.machines.advdebugstructurewriter.gui.print.tooltip=打印结构
-GT5U.machines.advdebugstructurewriter.gui.highlight.tooltip=显示边框
-GT5U.machines.advdebugstructurewriter.gui.transpose.tooltip=转置
+GT5U.machines.debugstructurewriter.tooltip=扫描周围的方块
+GT5U.machines.debugstructurewriter.tooltip.1=打印多方块非-方块实体结构验证码
+GT5U.machines.debugstructurewriter.tooltip.2=ABC轴与机器正面对齐
+GT5U.machines.debugstructurewriter.printed=已打印到控制台的结构
+GT5U.machines.debugstructurewriter.gui.origin=原点
+GT5U.machines.debugstructurewriter.gui.size=结构尺寸
+GT5U.machines.debugstructurewriter.gui.print.tooltip=打印结构
+GT5U.machines.debugstructurewriter.gui.highlight.tooltip=显示边框
+GT5U.machines.debugstructurewriter.gui.transpose.tooltip=转置
 
 GT5U.recipe_filter.representation_slot.tooltip=手持机器右键以设置过滤
 
@@ -228,7 +228,15 @@ GT5U.multiblock.efficiency=效率
 GT5U.multiblock.problems=问题
 GT5U.multiblock.mei=最大输入
 GT5U.multiblock.usage=大概功率
+GT5U.multiblock.runningMode=§e运行模式：
 
+GT5U.multiblock.scanner.pollution=污染减少到: §a%s§r%%
+GT5U.multiblock.scanner.energy=存储能量: §a%s §rEU / §e%s §rEU
+GT5U.multiblock.scanner.Progress=工作时间: §a%s §rs / §e%s §rs
+GT5U.multiblock.scanner.efficiency=效率: §e%s§r%%
+GT5U.multiblock.scanner.problems=问题: §c%s
+GT5U.multiblock.scanner.mei=最大输入: §e%s §rEU/t (*2A) Tier: §e%s
+GT5U.multiblock.scanner.usage=大概功率: §c%s §rEU/t
 
 # NEI recipe handlers
 
@@ -253,10 +261,6 @@ GT5U.config.colormodulation.cable_insulation=线缆绝缘材料
 GT5U.config.colormodulation.cable_insulation.B=蓝色
 GT5U.config.colormodulation.cable_insulation.G=绿色
 GT5U.config.colormodulation.cable_insulation.R=红色
-GT5U.config.colormodulation.construction_foam=建筑泡沫
-GT5U.config.colormodulation.construction_foam.B=蓝色
-GT5U.config.colormodulation.construction_foam.G=绿色
-GT5U.config.colormodulation.construction_foam.R=红色
 GT5U.config.colormodulation.machine_metal=机器金属(默认GUI颜色)
 GT5U.config.colormodulation.machine_metal.B=蓝色
 GT5U.config.colormodulation.machine_metal.G=绿色
@@ -306,7 +310,7 @@ GT5U.interface.coverTabs.east=东
 # Waila
 GT5U.waila.machine.working_disabled=工作停止
 GT5U.waila.machine.idle=空闲
-GT5U.waila.machine.in_progress=运行中: %,.1fs / %,.1fs (%,.1f%%)
+GT5U.waila.machine.in_progress=%,.1fs / %,.1fs (%,.1f%%)
 GT5U.waila.machine_facing=机器朝向: %s
 GT5U.waila.output_facing=输出方向: %s
 GT5U.waila.facing=方向: %s
@@ -320,24 +324,6 @@ GT5U.waila.facing.unknown=未知
 
 achievement.gettingstartedwithgt=第一把工具
 achievement.gettingstartedwithgt.desc=制造一把燧石镐
-achievement.crops=农业
-achievement.crops.desc=制造农作物
-achievement.havestlead=收获铅
-achievement.havestlead.desc=得到铅叶子
-achievement.havestcopper=收获铜
-achievement.havestcopper.desc=得到铜纤维
-achievement.havesttin=收获锡
-achievement.havesttin.desc=得到锡叶子
-achievement.havestoil=收获石油
-achievement.havestoil.desc=得到石油浆果
-achievement.havestiron=收获铁
-achievement.havestiron.desc=得到铁叶子
-achievement.havestgold=收获金
-achievement.havestgold.desc=得到金叶子
-achievement.havestsilver=收获银
-achievement.havestsilver.desc=得到银叶子
-achievement.havestemeralds=收获绿宝石
-achievement.havestemeralds.desc=得到易如反掌浆果
 achievement.tools=更多的工具
 achievement.tools.desc=制造一把锤子
 achievement.driltime=电钻时间!
@@ -760,37 +746,6 @@ achievement.gt.blockmachines.wireless.receiver.tier.13.desc=捡起此物品以�
 achievement.gt.blockmachines.wireless.receiver.tier.14=MAX无线能源仓
 achievement.gt.blockmachines.wireless.receiver.tier.14.desc=捡起此物品以在NEI内解锁该合成表
 
-achievement.gt.blockmachines.wireless.transmitter.tier.00=ULV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.00.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.01=LV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.01.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.02=MV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.02.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.03=HV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.03.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.04=EV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.04.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.05=IV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.05.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.06=LuV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.06.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.07=ZPM无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.07.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.08=UV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.08.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.09=UHV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.09.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.10=UEV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.10.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.11=UIV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.11.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.12=UMV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.12.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.13=UXV无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.13.desc=捡起此物品以在NEI内解锁该合成表
-achievement.gt.blockmachines.wireless.transmitter.tier.14=MAX无线动力仓
-achievement.gt.blockmachines.wireless.transmitter.tier.14.desc=捡起此物品以在NEI内解锁该合成表
-
 achievement.gt.blockmachines.multimachine.em.infuser=能量注入仪
 achievement.gt.blockmachines.multimachine.em.infuser.desc=捡起此物品以在NEI内解锁该合成表
 achievement.gt.blockmachines.hatch.holder.tier.09=物品固定容器
@@ -1068,8 +1023,6 @@ fluid.Formaldehyde=甲醛
 fluid.tcetieisfucusserratusfluid=鲸鱼座T星藻类培养液
 fluid.MeatExtract=肉汁
 //No recipe
-fluid.CompressedOxygen=压缩氧气
-fluid.CompressedNitrogen=压缩氮气
 fluid.redplasma=红等离子体
 fluid.tile.fluidBlockSludge=污泥
 //No Textrue
@@ -1092,12 +1045,11 @@ GTPP.machines.output=输出
 GTPP.multiblock.pollutionreduced=减少污染至
 GTPP.multiblock.pollution=污染
 GTPP.multiblock.energy=能量存储
-GTPP.multiblock.progress=进程
 GTPP.multiblock.efficiency=效率
-GTPP.multiblock.problems=维护问题
 GTPP.multiblock.mei=最大能量输入
 GTPP.multiblock.usage=NEI功率
 GTPP.multiblock.generation=可能生成
+
 GTPP.multiblock.specialvalue=特殊值
 GTPP.multiblock.duration=NEI时间
 
@@ -1308,3 +1260,22 @@ achievement.gt.blockmachines.gtpp.multimachine.flotationcell=工业浮选机
 achievement.gt.blockmachines.gtpp.multimachine.flotationcell.desc=[AL]捡起此物品以在NEI内解锁该合成表
 achievement.gt.blockmachines.gtpp.multimachine.isamill=艾萨研磨机
 achievement.gt.blockmachines.gtpp.multimachine.isamill.desc=[AL]捡起此物品以在NEI内解锁该合成表
+
+# Thaumcraft Aspects
+tc.aspect.custom1=平等,平衡,均衡
+tc.aspect.custom2=疯癫,癫狂,狂热
+tc.aspect.custom3=起始,起源,源头
+tc.aspect.custom4=星辰,星座,天国
+tc.aspect.custom5=荣耀,荣誉,声誉
+
+tc.aspect.custom1.name=平衡
+tc.aspect.custom2.name=癫狂
+tc.aspect.custom3.name=起源
+tc.aspect.custom4.name=星辰
+tc.aspect.custom5.name=荣耀
+
+tc.aspect.help.custom1=平衡的事物
+tc.aspect.help.custom2=扭曲的思想
+tc.aspect.help.custom3=新事物的起始
+tc.aspect.help.custom4=宇宙
+tc.aspect.help.custom5=荣耀

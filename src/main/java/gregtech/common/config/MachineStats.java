@@ -5,7 +5,7 @@ import com.gtnewhorizon.gtnhlib.config.Config;
 import gregtech.api.enums.Mods;
 
 @Config(
-    modid = Mods.Names.GREG_TECH,
+    modid = Mods.ModIDs.GREG_TECH,
     category = "machine_stats",
     configSubDirectory = "GregTech",
     filename = "MachineStats")
@@ -117,7 +117,7 @@ public class MachineStats {
         public boolean requiresUUA;
 
         @Config.Comment("Duration multiplier.")
-        @Config.DefaultInt(3215)
+        @Config.DefaultInt(3200)
         @Config.RequiresMcRestart
         public int durationMultiplier;
 
